@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "leaders-yakutiya"
+version = "0.1.0"
+description = ""
+authors = ["arsuhinars <arsuhinars@gmail.com>"]
+readme = "README.md"
+packages = [{include = "leaders_yakutiya"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.105.0"
+sqlalchemy = "^2.0.23"
+pydantic-settings = "^2.1.0"
+psycopg = {extras = ["binary"], version = "^3.1.15"}
+uvicorn = {extras = ["standart"], version = "^0.24.0.post1"}
+pydantic = "^2.5.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

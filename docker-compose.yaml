@@ -1,0 +1,60 @@
+
+services:
+  backend:
+    build:
+      context: .
+      target: run
+      args:
+        SERVER_PORT: 8000
+    ports:
+      - "$SERVER_PORT:8000"
+    environment:
+      ALLOW_ORIGINS: $ALLOW_ORIGINS
+    secrets:
+      - db_url
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    image: postgres:16
+    healthcheck:
+      test: pg_isready -U $DB_USERNAME -d $DB_NAME
+      interval: 3s
+      retries: 15
+      start_period: 5s
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER_FILE: "/run/secrets/db_username"
+      POSTGRES_PASSWORD_FILE: "/run/secrets/db_password"
+    secrets:
+      - db_username
+      - db_password
+  
+  # frontend:
+  #   build:
+  #     context: frontend
+  #     target: release
+  #     args:
+  #       FRONTEND_PORT: 5173
+  #   ports:
+  #     - "5173:5173"
+  #   depends_on:
+  #     - backend
+
+
+secrets:
+  db_username:
+    environment: DB_USERNAME
+  db_password:
+    environment: DB_PASSWORD
+  db_url:
+    environment: DB_URL
+
+
+volumes:
+  db_data:
